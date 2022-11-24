@@ -168,6 +168,9 @@ def move_tile( direction, blank_tile_pos):
             blank_tile_pos = [i, j + 1]
             moved = True
 
+    if moved:
+        blank_tile_moves.append(direction)
+    
     return blank_tile_pos
 
 
@@ -184,17 +187,15 @@ def shuffle_board(blank_tile_pos):
     moves = [ "up", "down", "left", "right"]
     last_move = ""
     i = 0
-    blank_tile_moves = []
     while i < turns:
         curr_move = random.choice(moves)
         if not check_move_good(last_move, curr_move) or not movable(curr_move, blank_tile_pos):
             continue
         blank_tile_pos = move_tile( curr_move, blank_tile_pos)
-        blank_tile_moves.append(curr_move)
         last_move = curr_move
         i += 1
 
-    return blank_tile_pos, blank_tile_moves
+    return blank_tile_pos
 
 
 
@@ -247,6 +248,10 @@ def solve_board( blank_tile_pos):
             pygame.display.update()
             pygame.time.delay(300)
 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
     return blank_tile_pos
 
 def redraw_window():
@@ -298,7 +303,7 @@ solution_btn = Button( 27.5 * tile_size, 18 * tile_size, solution_btn)
 
 # Game Loop ------------------------------------------------------------------------------------------------------------
 # init once
-blank_tile_pos, blank_tile_moves = shuffle_board(blank_tile_pos)
+blank_tile_pos = shuffle_board(blank_tile_pos)
 
 # loop over
 while True:
@@ -324,7 +329,7 @@ while True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if won:
                 won = False
-                blank_tile_pos, blank_tile_moves = shuffle_board(blank_tile_pos)
+                blank_tile_pos = shuffle_board(blank_tile_pos)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 sys.exit()
@@ -332,7 +337,7 @@ while True:
                 draw_rect = not draw_rect
             if event.key == pygame.K_ESCAPE and won:
                 won = False
-                blank_tile_pos, blank_tile_moves = shuffle_board(blank_tile_pos)
+                blank_tile_pos = shuffle_board(blank_tile_pos)
 
         # check tile motion
             if not won:
@@ -354,10 +359,12 @@ while True:
 
     # check buttons
     if new_game_btn.draw() and not won:
-        blank_tile_pos, blank_tile_moves  = shuffle_board(blank_tile_pos)
+        blank_tile_pos  = shuffle_board(blank_tile_pos)
 
     if solution_btn.draw() and not won:
         blank_tile_pos = solve_board(blank_tile_pos)
+        won == True
+        blank_tile_moves = []
 
     if won == True:
         screen.blit(fade_img, ( 0, 0))
@@ -366,6 +373,6 @@ while True:
     # draw grid line
     if draw_rect:
         drawGrid()
-    
+
     # refresh screen
     pygame.display.flip()
