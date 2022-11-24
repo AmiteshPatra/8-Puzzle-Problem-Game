@@ -211,6 +211,8 @@ def check_move_good( last_move, curr_move):
     
     return True
 
+
+
 def movable(move, blank_tile_pos):
     i, j = blank_tile_pos
 
@@ -224,6 +226,8 @@ def movable(move, blank_tile_pos):
         return False
     
     return True
+
+
 
 def solve_board( blank_tile_pos):
     for move in reversed( blank_tile_moves):
@@ -254,9 +258,11 @@ def solve_board( blank_tile_pos):
 
     return blank_tile_pos
 
+
+
 def redraw_window():
     screen.fill( bg_color)
-    screen.blit( logo_img, ( screen_width // 2 - 9.5 * tile_size, 0))
+    screen.blit( logo_img, ( screen_width // 2 - 9.5 * tile_size, 0.5 * tile_size))
     screen.blit( board_img, (2 * tile_size, 5 * tile_size))
     draw_tiles( tile_pos_matrix)
     new_game_btn.draw()
@@ -315,7 +321,7 @@ while True:
     screen.fill( bg_color)
 
     # fill images
-    screen.blit( logo_img, ( screen_width // 2 - 9.5 * tile_size, 0))
+    screen.blit( logo_img, ( screen_width // 2 - 9.5 * tile_size, 0.5 * tile_size))
     screen.blit( board_img, (2 * tile_size, 5 * tile_size))
 
     draw_tiles( tile_pos_matrix)
